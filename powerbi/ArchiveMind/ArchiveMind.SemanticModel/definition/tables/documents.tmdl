@@ -1,0 +1,197 @@
+table documents
+	lineageTag: 98f3e08e-421a-454b-aaef-979a30487ede
+
+	measure 'Total Manuscripts' = COALESCE(DISTINCTCOUNT(documents[document_id]), 0)
+		formatString: 0
+		lineageTag: f68de6c0-6c83-4a7c-b002-df3dd3392258
+
+	measure 'Total Collections' = COALESCE(DISTINCTCOUNTNOBLANK(documents[collection_id]), 0)
+		formatString: 0
+		lineageTag: 3003a201-0cd0-4578-a6e8-f7c777bfcc37
+
+	measure 'Total Archives' = COALESCE(DISTINCTCOUNTNOBLANK(documents[archive_id]), 0)
+		formatString: 0
+		lineageTag: e3a53dcf-38e9-45d0-abcc-5cfc3f0bf37d
+
+	measure 'At-Risk Manuscripts' = COALESCE(CALCULATE([Total Manuscripts], KEEPFILTERS(documents[physical_condition] IN {"Fragile", "Critical-Decay"})), 0)
+		formatString: 0
+		lineageTag: 3ad9de52-4853-4981-a806-823355702dcd
+
+	measure 'At-Risk Percentage' = DIVIDE([At-Risk Manuscripts], [Total Manuscripts], 0)
+		formatString: 0.0%
+		lineageTag: 787b0d4a-90cc-4b8c-b4e3-a5c52f8d30c9
+
+	measure 'Average OCR Confidence' = AVERAGE(ai_analytics[ocr_confidence])
+		formatString: 0.0%
+		lineageTag: 3c209cc5-7527-4fa0-b457-72525660c14b
+
+	measure 'Total Ingestion Jobs' = COALESCE(DISTINCTCOUNT(ingestion_analytics[job_id]), 0)
+		formatString: 0
+		lineageTag: 9b12c6ed-44cd-493a-a600-5f95c4f3eba6
+
+	measure 'Completed Jobs' = COALESCE(CALCULATE([Total Ingestion Jobs], ingestion_analytics[status] = "COMPLETED"), 0)
+		formatString: 0
+		lineageTag: ac54dc0a-a9be-4eb3-b3ea-80ff3b0a1dae
+
+	measure 'Failed Jobs' = COALESCE(CALCULATE([Total Ingestion Jobs], ingestion_analytics[status] = "FAILED"), 0)
+		formatString: 0
+		lineageTag: 44af1095-0ba4-4349-a02a-a8dee3061531
+
+	measure 'Average Processing Duration' = AVERAGE(ingestion_analytics[processing_duration_seconds])
+		formatString: 0.0
+		lineageTag: 5f062223-4b1b-47e6-9226-57b2b6e1b0e4
+
+	measure 'Average ML Confidence' = AVERAGE(ai_analytics[prediction_confidence])
+		formatString: 0.0%
+		lineageTag: 1dd9f3b4-79a0-4a34-9ad2-cd8ec27ba4da
+
+	measure 'OCR Results' = COUNT(ai_analytics[ocr_confidence])
+		formatString: 0
+		lineageTag: a2206b33-b989-4616-8964-774f57eb0167
+
+	measure 'Predicted Documents' = COUNT(ai_analytics[prediction_confidence])
+		formatString: 0
+		lineageTag: f023a290-5101-4112-b2d2-c7bfd7d5d846
+
+	measure 'Semantic Documents' = DISTINCTCOUNT(semantic_vectors[document_id])
+		formatString: 0
+		lineageTag: 2058de0b-9f74-4e53-aa8e-dd4fd3e49c01
+
+	measure 'Pair Similarity' = MAX(semantic_similarity[cosine_similarity])
+		formatString: 0.000
+		lineageTag: 7b86deb3-0bad-4e59-9f7a-4082c4761508
+
+	measure 'Total Documents' = [Total Manuscripts]
+		formatString: 0
+		lineageTag: 4db32a01-3387-4c23-ba4c-a66c9e626f46
+
+	measure 'Documents with OCR Results' = COALESCE(COUNTROWS(FILTER(ai_analytics, NOT ISBLANK(ai_analytics[ocr_engine]))),0)
+		formatString: 0
+		lineageTag: 7763b51f-a9ff-424f-aadb-458766b4fb11
+
+	measure 'Documents without OCR Results' = MAX(0,[Total Documents]-[Documents with OCR Results])
+		formatString: 0
+		lineageTag: e9f5c772-b17c-47a8-8dac-74ca58bcca94
+
+	measure 'Documents with ML Predictions' = COALESCE(COUNTROWS(FILTER(ai_analytics, NOT ISBLANK(ai_analytics[predicted_condition]))),0)
+		formatString: 0
+		lineageTag: f6da7abb-3ad3-4693-bf15-5805bb37e923
+
+	measure 'OCR Coverage Percentage' = DIVIDE([Documents with OCR Results],[Total Documents],0)
+		formatString: 0.0%
+		lineageTag: fb2a2be4-9b7b-41a4-8d20-dac3eb527e7b
+
+	measure 'OCR Availability' = IF([Documents with OCR Results]=0,"No recorded OCR results","OCR results available")
+		lineageTag: 7a998922-9302-46b8-b885-e63ab0c3a332
+
+	measure 'ML Availability' = IF([Documents with ML Predictions]=0,"No recorded predictions","Predictions available")
+		lineageTag: 9c1ae9bf-4f57-4747-a79c-2549871e2c99
+
+	measure 'Ingestion Availability' = IF([Total Ingestion Jobs]=0,"No recorded ingestion jobs","Ingestion records available")
+		lineageTag: e7bf3291-0e5b-4690-ab51-8ada70d0ab86
+
+	column document_id
+		dataType: int64
+		lineageTag: 495453a9-863a-484b-afb0-973602966239
+		summarizeBy: none
+		sourceColumn: document_id
+
+	column title
+		dataType: string
+		lineageTag: 2660e6c6-80d8-4938-9806-9afe41088c30
+		summarizeBy: none
+		sourceColumn: title
+
+	column doc_type
+		dataType: string
+		lineageTag: b00bd07f-1984-4287-936b-da1966d2a941
+		summarizeBy: none
+		sourceColumn: doc_type
+
+	column date_written
+		dataType: string
+		lineageTag: 29478d36-17a7-4691-9cc7-3b113065ae72
+		summarizeBy: none
+		sourceColumn: date_written
+
+	column digitized_at
+		dataType: dateTime
+		lineageTag: 03656ee5-6186-40d6-9dd5-75263ba3ab81
+		summarizeBy: none
+		sourceColumn: digitized_at
+
+	column physical_condition
+		dataType: string
+		lineageTag: b29a668f-beeb-4eef-b383-b6da4a978178
+		summarizeBy: none
+		sourceColumn: physical_condition
+
+	column collection_name
+		dataType: string
+		lineageTag: 8db8f51e-f636-4094-a684-0ba16d935c70
+		summarizeBy: none
+		sourceColumn: collection_name
+
+	column archive_name
+		dataType: string
+		lineageTag: 00ac6c4f-b62d-4900-8e9f-03145a84d834
+		summarizeBy: none
+		sourceColumn: archive_name
+
+	column era
+		dataType: string
+		lineageTag: 08bf8a5f-b125-4e27-bf0b-070da3581f9c
+		summarizeBy: none
+		sourceColumn: era
+
+	column author_names
+		dataType: string
+		lineageTag: 58fd5ad9-9d77-4323-94a4-df40f7222a9e
+		summarizeBy: none
+		sourceColumn: author_names
+
+	column ocr_status
+		dataType: string
+		lineageTag: 561916f1-2a7f-4cd4-a2ec-4c52ef805b1e
+		summarizeBy: none
+		sourceColumn: ocr_status
+
+	column collection_id
+		dataType: int64
+		lineageTag: 43fed0c6-a135-4a24-b3ef-f9b6b9cc305d
+		summarizeBy: none
+		sourceColumn: collection_id
+
+	column archive_id
+		dataType: int64
+		lineageTag: 434a205d-57ac-4360-abff-400f31d9875b
+		summarizeBy: none
+		sourceColumn: archive_id
+
+	column 'Digitization Day' = IF(ISBLANK(documents[digitized_at]),BLANK(),DATE(YEAR(documents[digitized_at]),MONTH(documents[digitized_at]),DAY(documents[digitized_at])))
+		dataType: dateTime
+		formatString: dd MMM yyyy
+		lineageTag: baa6f396-fd7b-41c9-84f5-6e480537b299
+		summarizeBy: none
+
+	column 'Recorded OCR' = IF(ISBLANK(LOOKUPVALUE(ai_analytics[ocr_engine],ai_analytics[document_id],documents[document_id])),"No recorded OCR result","OCR result recorded")
+		dataType: string
+		lineageTag: e647498d-747b-442f-8662-6569d831b5fa
+		summarizeBy: none
+
+	column 'Recorded Prediction' = COALESCE(LOOKUPVALUE(ai_analytics[predicted_condition],ai_analytics[document_id],documents[document_id]),"No recorded prediction")
+		dataType: string
+		lineageTag: 5407ad68-874c-4561-b926-5928f3e234f4
+		summarizeBy: none
+
+	partition documents = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(ExportFolder & "/documents.csv"), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				    Headers = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    Nulls = Table.ReplaceValue(Headers, "", null, Replacer.ReplaceValue, Table.ColumnNames(Headers)),
+				    Typed = Table.TransformColumnTypes(Nulls, {{"document_id", Int64.Type}, {"title", type text}, {"doc_type", type text}, {"date_written", type text}, {"digitized_at", type datetime}, {"physical_condition", type text}, {"collection_name", type text}, {"archive_name", type text}, {"era", type text}, {"author_names", type text}, {"ocr_status", type text}, {"collection_id", Int64.Type}, {"archive_id", Int64.Type}}, "en-US"),
+				    Clean = Table.ReplaceErrorValues(Typed, List.Transform(Table.ColumnNames(Typed), each {_, null}))
+				in
+				    Clean

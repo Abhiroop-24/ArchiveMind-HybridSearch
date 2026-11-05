@@ -947,3 +947,20 @@ if os.path.exists(FRONTEND_DIR):
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("backend.server:app", host="0.0.0.0", port=8000, reload=True)
+
+
+@app.get("/powerbi/setup", include_in_schema=False)
+def powerbi_setup():
+    return FileResponse(Path(BASE_DIR) / "powerbi" / "README.md", media_type="text/plain")
+
+
+@app.get("/powerbi/exports/{filename}", include_in_schema=False)
+def powerbi_export_file(filename: str):
+    allowed = {"documents.csv", "ai_analytics.csv", "ingestion_analytics.csv",
+               "semantic_vectors.csv", "semantic_similarity.csv", "export_summary.json"}
+    if filename not in allowed:
+        raise HTTPException(status_code=404, detail="Unknown analytics export")
+    target = Path(BASE_DIR) / "powerbi" / "exports" / filename
+    if not target.is_file():
+        raise HTTPException(status_code=404, detail="Run scripts/export_powerbi.py first; see /powerbi/setup")
+    return FileResponse(target, filename=filename)

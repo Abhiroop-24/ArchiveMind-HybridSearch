@@ -1,0 +1,4 @@
+expression ExportFolder = "C:/ArchiveMind-HybridSearch/powerbi/exports" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+	lineageTag: 6758973c-de9d-4c3a-b1d3-c75913870202
+
+	annotation PBI_ResultType = Text

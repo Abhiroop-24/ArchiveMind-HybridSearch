@@ -1,0 +1,46 @@
+﻿document_id_a,document_id_b,title_a,title_b,cosine_similarity
+1,2,Philosophiae Naturalis Principia Mathematica - Draft Folio 12,Opticks: On the Dispersion and Refraction of White Light,0.1317615658044815
+1,3,Philosophiae Naturalis Principia Mathematica - Draft Folio 12,Codex Atlanticus: Folio 104v on Aerial Screws and Vortex Fluid Dynamics,0.14433756470680237
+1,4,Philosophiae Naturalis Principia Mathematica - Draft Folio 12,Anatomical Study: Musculature and Tendons of the Human Arm,0.3578132390975952
+1,5,Philosophiae Naturalis Principia Mathematica - Draft Folio 12,Mock Theta Functions - Final Letter to G.H. Hardy from Madras,0.10206207633018494
+1,6,Philosophiae Naturalis Principia Mathematica - Draft Folio 12,Lost Notebook: Modular Equations and Asymptotic Partitions Folio 34,0.06741998344659805
+1,7,Philosophiae Naturalis Principia Mathematica - Draft Folio 12,Hut 8 Cryptanalysis Memo on Enigma Naval 4-Rotor Wirings,0.15811389684677124
+1,8,Philosophiae Naturalis Principia Mathematica - Draft Folio 12,Computing Machinery and Intelligence: Can Machines Think?,0.23094011843204498
+1,9,Philosophiae Naturalis Principia Mathematica - Draft Folio 12,Notes on the Analytical Engine: Note G - Bernoulli Number Computation,0.20795010030269623
+1,10,Philosophiae Naturalis Principia Mathematica - Draft Folio 12,Difference Engine Architecture and Logarithmic Tables Proof,0.1613743007183075
+2,3,Opticks: On the Dispersion and Refraction of White Light,Codex Atlanticus: Folio 104v on Aerial Screws and Vortex Fluid Dynamics,0.1521451473236084
+2,4,Opticks: On the Dispersion and Refraction of White Light,Anatomical Study: Musculature and Tendons of the Human Arm,0.14506471157073975
+2,5,Opticks: On the Dispersion and Refraction of White Light,Mock Theta Functions - Final Letter to G.H. Hardy from Madras,0.021516576409339905
+2,6,Opticks: On the Dispersion and Refraction of White Light,Lost Notebook: Modular Equations and Asymptotic Partitions Folio 34,0.1776672750711441
+2,7,Opticks: On the Dispersion and Refraction of White Light,Hut 8 Cryptanalysis Memo on Enigma Naval 4-Rotor Wirings,0.13333334028720856
+2,8,Opticks: On the Dispersion and Refraction of White Light,Computing Machinery and Intelligence: Can Machines Think?,0.1521451622247696
+2,9,Opticks: On the Dispersion and Refraction of White Light,Notes on the Analytical Engine: Note G - Bernoulli Number Computation,0.1917988359928131
+2,10,Opticks: On the Dispersion and Refraction of White Light,Difference Engine Architecture and Logarithmic Tables Proof,0.10206207633018494
+3,4,Codex Atlanticus: Folio 104v on Aerial Screws and Vortex Fluid Dynamics,Anatomical Study: Musculature and Tendons of the Human Arm,0.2224746197462082
+3,5,Codex Atlanticus: Folio 104v on Aerial Screws and Vortex Fluid Dynamics,Mock Theta Functions - Final Letter to G.H. Hardy from Madras,0.0942809134721756
+3,6,Codex Atlanticus: Folio 104v on Aerial Screws and Vortex Fluid Dynamics,Lost Notebook: Modular Equations and Asymptotic Partitions Folio 34,0.07784989476203918
+3,7,Codex Atlanticus: Folio 104v on Aerial Screws and Vortex Fluid Dynamics,Hut 8 Cryptanalysis Memo on Enigma Naval 4-Rotor Wirings,0.10954450815916061
+3,8,Codex Atlanticus: Folio 104v on Aerial Screws and Vortex Fluid Dynamics,Computing Machinery and Intelligence: Can Machines Think?,0.13333334028720856
+3,9,Codex Atlanticus: Folio 104v on Aerial Screws and Vortex Fluid Dynamics,Notes on the Analytical Engine: Note G - Bernoulli Number Computation,0.1500750631093979
+3,10,Codex Atlanticus: Folio 104v on Aerial Screws and Vortex Fluid Dynamics,Difference Engine Architecture and Logarithmic Tables Proof,0.22360679507255554
+4,5,Anatomical Study: Musculature and Tendons of the Human Arm,Mock Theta Functions - Final Letter to G.H. Hardy from Madras,0.06741999089717865
+4,6,Anatomical Study: Musculature and Tendons of the Human Arm,Lost Notebook: Modular Equations and Asymptotic Partitions Folio 34,0.14845392107963562
+4,7,Anatomical Study: Musculature and Tendons of the Human Arm,Hut 8 Cryptanalysis Memo on Enigma Naval 4-Rotor Wirings,0.17407765984535217
+4,8,Anatomical Study: Musculature and Tendons of the Human Arm,Computing Machinery and Intelligence: Can Machines Think?,0.34960296750068665
+4,9,Anatomical Study: Musculature and Tendons of the Human Arm,Notes on the Analytical Engine: Note G - Bernoulli Number Computation,0.3720364570617676
+4,10,Anatomical Study: Musculature and Tendons of the Human Arm,Difference Engine Architecture and Logarithmic Tables Proof,0.3553345501422882
+5,6,Mock Theta Functions - Final Letter to G.H. Hardy from Madras,Lost Notebook: Modular Equations and Asymptotic Partitions Folio 34,0.05504819378256798
+5,7,Mock Theta Functions - Final Letter to G.H. Hardy from Madras,Hut 8 Cryptanalysis Memo on Enigma Naval 4-Rotor Wirings,0.025819892063736916
+5,8,Mock Theta Functions - Final Letter to G.H. Hardy from Madras,Computing Machinery and Intelligence: Can Machines Think?,0.1178511455655098
+5,9,Mock Theta Functions - Final Letter to G.H. Hardy from Madras,Notes on the Analytical Engine: Note G - Bernoulli Number Computation,0.10611910372972488
+5,10,Mock Theta Functions - Final Letter to G.H. Hardy from Madras,Difference Engine Architecture and Logarithmic Tables Proof,0.02635231800377369
+6,7,Lost Notebook: Modular Equations and Asymptotic Partitions Folio 34,Hut 8 Cryptanalysis Memo on Enigma Naval 4-Rotor Wirings,0.25584086775779724
+6,8,Lost Notebook: Modular Equations and Asymptotic Partitions Folio 34,Computing Machinery and Intelligence: Can Machines Think?,0.11677485704421997
+6,9,Lost Notebook: Modular Equations and Asymptotic Partitions Folio 34,Notes on the Analytical Engine: Note G - Bernoulli Number Computation,0.1401999443769455
+6,10,Lost Notebook: Modular Equations and Asymptotic Partitions Folio 34,Difference Engine Architecture and Logarithmic Tables Proof,0.2175970822572708
+7,8,Hut 8 Cryptanalysis Memo on Enigma Naval 4-Rotor Wirings,Computing Machinery and Intelligence: Can Machines Think?,0.14605936408042908
+7,9,Hut 8 Cryptanalysis Memo on Enigma Naval 4-Rotor Wirings,Notes on the Analytical Engine: Note G - Bernoulli Number Computation,0.19727879762649536
+7,10,Hut 8 Cryptanalysis Memo on Enigma Naval 4-Rotor Wirings,Difference Engine Architecture and Logarithmic Tables Proof,0.08164966106414795
+8,9,Computing Machinery and Intelligence: Can Machines Think?,Notes on the Analytical Engine: Note G - Bernoulli Number Computation,0.24012011289596558
+8,10,Computing Machinery and Intelligence: Can Machines Think?,Difference Engine Architecture and Logarithmic Tables Proof,0.14907121658325195
+9,10,Notes on the Analytical Engine: Note G - Bernoulli Number Computation,Difference Engine Architecture and Logarithmic Tables Proof,0.20134684443473816

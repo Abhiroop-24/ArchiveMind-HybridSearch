@@ -1,0 +1,27 @@
+// Each measure is created separately with Modeling > New measure.
+// Confidence source columns are proportions [0,1]; format confidence measures as Percentage.
+Total Manuscripts = COALESCE(DISTINCTCOUNT(documents[document_id]), 0)
+Total Collections = COALESCE(DISTINCTCOUNTNOBLANK(documents[collection_id]), 0)
+Total Archives = COALESCE(DISTINCTCOUNTNOBLANK(documents[archive_id]), 0)
+At-Risk Manuscripts = COALESCE(CALCULATE([Total Manuscripts], KEEPFILTERS(documents[physical_condition] IN {"Fragile", "Critical-Decay"})), 0)
+At-Risk Percentage = DIVIDE([At-Risk Manuscripts], [Total Manuscripts], 0)
+Average OCR Confidence = AVERAGE(ai_analytics[ocr_confidence])
+Total Ingestion Jobs = COALESCE(DISTINCTCOUNT(ingestion_analytics[job_id]), 0)
+Completed Jobs = COALESCE(CALCULATE([Total Ingestion Jobs], ingestion_analytics[status] = "COMPLETED"), 0)
+Failed Jobs = COALESCE(CALCULATE([Total Ingestion Jobs], ingestion_analytics[status] = "FAILED"), 0)
+Average Processing Duration = AVERAGE(ingestion_analytics[processing_duration_seconds])
+Average ML Confidence = AVERAGE(ai_analytics[prediction_confidence])
+OCR Results = COUNT(ai_analytics[ocr_confidence])
+Predicted Documents = COUNT(ai_analytics[prediction_confidence])
+Semantic Documents = DISTINCTCOUNT(semantic_vectors[document_id])
+Pair Similarity = MAX(semantic_similarity[cosine_similarity])
+
+// Coverage and empty states added by report optimization
+Total Documents = [Total Manuscripts]
+Documents with OCR Results = COALESCE(COUNTROWS(FILTER(ai_analytics, NOT ISBLANK(ai_analytics[ocr_engine]))),0)
+Documents without OCR Results = MAX(0,[Total Documents]-[Documents with OCR Results])
+Documents with ML Predictions = COALESCE(COUNTROWS(FILTER(ai_analytics, NOT ISBLANK(ai_analytics[predicted_condition]))),0)
+OCR Coverage Percentage = DIVIDE([Documents with OCR Results],[Total Documents],0)
+OCR Availability = IF([Documents with OCR Results]=0,"No recorded OCR results","OCR results available")
+ML Availability = IF([Documents with ML Predictions]=0,"No recorded predictions","Predictions available")
+Ingestion Availability = IF([Total Ingestion Jobs]=0,"No recorded ingestion jobs","Ingestion records available")

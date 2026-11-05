@@ -36,9 +36,9 @@ def get_thematic_domain(title: str, collection_name: str) -> Dict[str, str]:
         return {"domain": "Archival Folios & Preserved Treatises", "color": "#ffffff", "symbol": "book-open"}
 
 
-def compute_vector_space() -> Dict[str, Any]:
+def compute_vector_space(connection=None) -> Dict[str, Any]:
     """Loads all chunk embeddings from SQLite and projects to 2D semantic coordinates."""
-    conn = sqlite3.connect(str(DB_PATH))
+    conn = connection if connection is not None else sqlite3.connect(DB_PATH.resolve().as_uri() + "?mode=ro", uri=True)
     conn.row_factory = sqlite3.Row
     cur = conn.cursor()
 
@@ -54,11 +54,17 @@ def compute_vector_space() -> Dict[str, Any]:
         JOIN archive a ON c.archive_id = a.archive_id
         JOIN document_chunk dc ON d.document_id = dc.document_id
         JOIN chunk_embedding ce ON dc.chunk_id = ce.chunk_id
-        GROUP BY d.document_id
+        WHERE dc.chunk_id = (
+            SELECT dc2.chunk_id FROM document_chunk dc2
+            JOIN chunk_embedding ce2 USING(chunk_id)
+            WHERE dc2.document_id=d.document_id
+            ORDER BY dc2.chunk_index,dc2.chunk_id LIMIT 1
+        )
         ORDER BY d.document_id ASC
     """)
     rows = cur.fetchall()
-    conn.close()
+    if connection is None:
+        conn.close()
 
     if not rows:
         return {"nodes": [], "domains": []}
@@ -69,8 +75,10 @@ def compute_vector_space() -> Dict[str, Any]:
     for r in rows:
         blob = r["embedding_blob"]
         if blob:
+            if len(blob) != 384 * 4:
+                continue
             v = np.frombuffer(blob, dtype=np.float32)
-            if len(v) == 384:
+            if np.isfinite(v).all() and np.linalg.norm(v) > 1e-6:
                 vecs.append(v)
                 dom = get_thematic_domain(r["title"], r["collection_name"])
                 metadata.append({
@@ -87,6 +95,8 @@ def compute_vector_space() -> Dict[str, Any]:
                     "snippet": (r["ocr_text_cache"] or "")[:120] + "..."
                 })
 
+    if not vecs:
+        return {"nodes": [], "domains": []}
     X = np.array(vecs)
     mean_vec = np.mean(X, axis=0)
     X_centered = X - mean_vec
@@ -94,6 +104,8 @@ def compute_vector_space() -> Dict[str, Any]:
     # SVD for 2D projection
     u, s, vt = np.linalg.svd(X_centered, full_matrices=False)
     proj_basis = vt[:2].T  # (384, 2)
+    if proj_basis.shape[1] < 2:
+        proj_basis = np.pad(proj_basis, ((0, 0), (0, 2 - proj_basis.shape[1])))
     X_2d = np.dot(X_centered, proj_basis)
 
     scale = float(np.max(np.abs(X_2d))) if len(X_2d) > 0 else 1.0
@@ -195,17 +207,17 @@ def project_search_query(query_text: str) -> Dict[str, Any]:
     }
 
 
-def compute_similarity_matrix() -> Dict[str, Any]:
+def compute_similarity_matrix(connection=None) -> Dict[str, Any]:
     """
     Computes NxN pairwise cosine similarity matrix across all archival documents
     in the 384-dimensional MiniLM dense vector space.
     """
-    space = compute_vector_space()
+    space = compute_vector_space(connection=connection)
     nodes = space.get("nodes", [])
     if not nodes:
         return {"documents": [], "matrix": [], "metrics": {}}
 
-    conn = sqlite3.connect(DB_PATH)
+    conn = connection if connection is not None else sqlite3.connect(DB_PATH.resolve().as_uri() + "?mode=ro", uri=True)
     cur = conn.cursor()
     doc_ids = [n["document_id"] for n in nodes]
 
@@ -216,7 +228,7 @@ def compute_similarity_matrix() -> Dict[str, Any]:
             FROM document_chunk dc
             JOIN chunk_embedding ce ON dc.chunk_id = ce.chunk_id
             WHERE dc.document_id = ?
-            LIMIT 1
+            ORDER BY dc.chunk_index,dc.chunk_id LIMIT 1
         """, (doc_id,))
         row = cur.fetchone()
         if row and row[0]:
@@ -227,14 +239,15 @@ def compute_similarity_matrix() -> Dict[str, Any]:
             vec_map[doc_id] = v
         else:
             vec_map[doc_id] = np.zeros(384, dtype=np.float32)
-    conn.close()
+    if connection is None:
+        conn.close()
 
     valid_nodes = [n for n in nodes if n["document_id"] in vec_map]
     vec_matrix = np.array([vec_map[n["document_id"]] for n in valid_nodes], dtype=np.float32)
 
     # Pairwise cosine similarity matrix: X * X.T
     sim_matrix = np.dot(vec_matrix, vec_matrix.T)
-    sim_matrix = np.clip(sim_matrix, 0.0, 1.0)
+    sim_matrix = np.clip(sim_matrix, -1.0, 1.0)
 
     doc_list = []
     for n in valid_nodes:
@@ -247,7 +260,7 @@ def compute_similarity_matrix() -> Dict[str, Any]:
 
     return {
         "documents": doc_list,
-        "matrix": [[round(float(val), 3) for val in row] for row in sim_matrix],
+        "matrix": [[float(val) for val in row] for row in sim_matrix],
         "metrics": {
             "dimension": 384,
             "metric": "Cosine Similarity (Unit Hyper-sphere Dot Product)",

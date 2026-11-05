@@ -1,0 +1,62 @@
+table ai_analytics
+	lineageTag: 042de7cb-4e80-40dd-96f2-15ad36bade59
+
+	column document_id
+		dataType: int64
+		lineageTag: 9c2ea492-be7d-4359-80f1-dd16697dcfd8
+		summarizeBy: none
+		sourceColumn: document_id
+
+	column document_title
+		dataType: string
+		lineageTag: d4a76cfb-6200-4a5e-8aec-4e38f289d8f6
+		summarizeBy: none
+		sourceColumn: document_title
+
+	column ocr_engine
+		dataType: string
+		lineageTag: 29e22300-b645-4709-880b-b8eb1b566ceb
+		summarizeBy: none
+		sourceColumn: ocr_engine
+
+	column ocr_confidence
+		dataType: double
+		lineageTag: 51e8cd10-d581-410b-9519-066fadd0a8d6
+		summarizeBy: none
+		sourceColumn: ocr_confidence
+
+	column predicted_condition
+		dataType: string
+		lineageTag: 1954ad36-f9b6-4ec2-8e39-4a976d72b6a2
+		summarizeBy: none
+		sourceColumn: predicted_condition
+
+	column prediction_confidence
+		dataType: double
+		lineageTag: 26fcaa89-94f0-4281-80c4-56b30a37e1ab
+		summarizeBy: none
+		sourceColumn: prediction_confidence
+
+	column model_name
+		dataType: string
+		lineageTag: 1606f8f3-9c1b-45c4-84f8-24e986df5869
+		summarizeBy: none
+		sourceColumn: model_name
+
+	column correction_status
+		dataType: string
+		lineageTag: 5bfed011-88c0-4f00-a470-79dc0b572242
+		summarizeBy: none
+		sourceColumn: correction_status
+
+	partition ai_analytics = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(ExportFolder & "/ai_analytics.csv"), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				    Headers = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    Nulls = Table.ReplaceValue(Headers, "", null, Replacer.ReplaceValue, Table.ColumnNames(Headers)),
+				    Typed = Table.TransformColumnTypes(Nulls, {{"document_id", Int64.Type}, {"document_title", type text}, {"ocr_engine", type text}, {"ocr_confidence", type number}, {"predicted_condition", type text}, {"prediction_confidence", type number}, {"model_name", type text}, {"correction_status", type text}}, "en-US"),
+				    Clean = Table.ReplaceErrorValues(Typed, List.Transform(Table.ColumnNames(Typed), each {_, null}))
+				in
+				    Clean

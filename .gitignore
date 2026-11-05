@@ -24,3 +24,16 @@ storage/uploads/*
 !storage/processed/.gitkeep
 !storage/uploads/.gitkeep
 
+
+# Power BI local caches
+**/.pbi/
+**/cache.abf
+**/localSettings.json
+
+# Local reports, backups and databases
+powerbi/backups/
+powerbi/access-check.tmp
+ArchiveMind-PowerBI-integration/
+*.db
+*.db-wal
+*.db-shm

@@ -1,0 +1,47 @@
+table semantic_similarity
+	lineageTag: b820295c-4dd4-4142-ae75-f5f9fd301345
+
+	column document_id_a
+		dataType: int64
+		lineageTag: b72eaa48-38c0-45cd-af1b-a83ccb781d2d
+		summarizeBy: none
+		sourceColumn: document_id_a
+
+	column document_id_b
+		dataType: int64
+		lineageTag: ec58854c-042e-4a37-b16a-2997cf6b5085
+		summarizeBy: none
+		sourceColumn: document_id_b
+
+	column title_a
+		dataType: string
+		lineageTag: 42895193-ddc3-41ce-8f5c-25fb38904c19
+		summarizeBy: none
+		sourceColumn: title_a
+
+	column title_b
+		dataType: string
+		lineageTag: d69f3860-f33d-4cf8-b4ef-11c4465f7b62
+		summarizeBy: none
+		sourceColumn: title_b
+
+	column cosine_similarity
+		dataType: double
+		formatString: 0.000
+		lineageTag: c41ebaba-91c3-4cee-8e46-4377ba077c9b
+		summarizeBy: none
+		sourceColumn: cosine_similarity
+
+	partition semantic_similarity = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(ExportFolder & "/semantic_similarity.csv"), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				    Headers = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    Nulls = Table.ReplaceValue(Headers, "", null, Replacer.ReplaceValue, Table.ColumnNames(Headers)),
+				    Typed = Table.TransformColumnTypes(Nulls, {{"document_id_a", Int64.Type}, {"document_id_b", Int64.Type}, {"title_a", type text}, {"title_b", type text}, {"cosine_similarity", type number}}, "en-US"),
+				    Clean = Table.ReplaceErrorValues(Typed, List.Transform(Table.ColumnNames(Typed), each {_, null}))
+				in
+				    Clean
+
+	annotation PBI_ResultType = Table

@@ -1,0 +1,7 @@
+relationship ai_analytics_document
+	fromColumn: ai_analytics.document_id
+	toColumn: documents.document_id
+
+relationship semantic_vectors_document
+	fromColumn: semantic_vectors.document_id
+	toColumn: documents.document_id

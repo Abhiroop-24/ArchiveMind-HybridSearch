@@ -1,0 +1,15 @@
+{
+  "exported_at": "2026-11-03T02:35:36.194996+00:00",
+  "row_counts": {
+    "documents": 10,
+    "ai_analytics": 10,
+    "ingestion_analytics": 0,
+    "semantic_vectors": 10,
+    "semantic_similarity": 45
+  },
+  "warnings": [
+    "Embedding provenance is unverified: existing ArchiveMind seed/offline paths store fallback vectors under the MiniLM model name. These exports do not certify genuine MiniLM inference. Domains are title/collection keyword labels, not learned clusters."
+  ],
+  "evidence": "SQLite snapshot; provenance unverified",
+  "similarity": "Upper triangle, excludes self; actual 384-D cosine [-1,1]"
+}

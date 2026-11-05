@@ -1,0 +1,72 @@
+{
+  "name": "ArchiveMind Dark",
+  "dataColors": [
+    "#B6FF56",
+    "#52C7B8",
+    "#B69DFF",
+    "#FFBD69",
+    "#FF788B"
+  ],
+  "background": "#101418",
+  "foreground": "#F4F7F8",
+  "tableAccent": "#B6FF56",
+  "visualStyles": {
+    "*": {
+      "*": {
+        "background": [
+          {
+            "color": {
+              "solid": {
+                "color": "#1B2329"
+              }
+            },
+            "transparency": 0
+          }
+        ],
+        "labels": [
+          {
+            "color": {
+              "solid": {
+                "color": "#F4F7F8"
+              }
+            }
+          }
+        ],
+        "legend": [
+          {
+            "labelColor": {
+              "solid": {
+                "color": "#A6B4BB"
+              }
+            },
+            "fontSize": 11
+          }
+        ],
+        "values": [
+          {
+            "fontColorPrimary": {
+              "solid": {
+                "color": "#F4F7F8"
+              }
+            },
+            "backColorPrimary": {
+              "solid": {
+                "color": "#1B2329"
+              }
+            },
+            "fontColorSecondary": {
+              "solid": {
+                "color": "#F4F7F8"
+              }
+            },
+            "backColorSecondary": {
+              "solid": {
+                "color": "#26343D"
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}

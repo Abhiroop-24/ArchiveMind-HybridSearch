@@ -1,0 +1,56 @@
+table ingestion_analytics
+	lineageTag: e7b7af90-771e-4b3a-b577-ee16cd9b146b
+
+	column job_id
+		dataType: string
+		lineageTag: 62d9686c-e91d-4e3b-9a0b-3066b896b840
+		summarizeBy: none
+		sourceColumn: job_id
+
+	column scan_id
+		dataType: string
+		lineageTag: b5e09196-7f60-4de0-a974-b9fcac737f1c
+		summarizeBy: none
+		sourceColumn: scan_id
+
+	column device_name
+		dataType: string
+		lineageTag: c193f48d-5920-45ab-b96f-e5a9e962a0ef
+		summarizeBy: none
+		sourceColumn: device_name
+
+	column status
+		dataType: string
+		lineageTag: 0b24b2e4-828b-4911-a4b5-ca82b4688133
+		summarizeBy: none
+		sourceColumn: status
+
+	column created_at
+		dataType: dateTime
+		lineageTag: e178aca2-228c-4b35-b6df-36a891ae23a2
+		summarizeBy: none
+		sourceColumn: created_at
+
+	column completed_at
+		dataType: dateTime
+		lineageTag: 35412a40-4c94-43f5-b696-5dac6faffa9a
+		summarizeBy: none
+		sourceColumn: completed_at
+
+	column processing_duration_seconds
+		dataType: double
+		lineageTag: 02601666-5967-471a-ab57-2629eadfb22a
+		summarizeBy: none
+		sourceColumn: processing_duration_seconds
+
+	partition ingestion_analytics = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(ExportFolder & "/ingestion_analytics.csv"), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				    Headers = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    Nulls = Table.ReplaceValue(Headers, "", null, Replacer.ReplaceValue, Table.ColumnNames(Headers)),
+				    Typed = Table.TransformColumnTypes(Nulls, {{"job_id", type text}, {"scan_id", type text}, {"device_name", type text}, {"status", type text}, {"created_at", type datetime}, {"completed_at", type datetime}, {"processing_duration_seconds", type number}}, "en-US"),
+				    Clean = Table.ReplaceErrorValues(Typed, List.Transform(Table.ColumnNames(Typed), each {_, null}))
+				in
+				    Clean

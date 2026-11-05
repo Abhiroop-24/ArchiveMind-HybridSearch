@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "ArchiveMind"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "ffa61896-ff41-4044-b9ae-bb253f313b09"
+  }
+}

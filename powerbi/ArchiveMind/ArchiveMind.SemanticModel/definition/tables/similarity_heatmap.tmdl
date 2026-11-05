@@ -1,0 +1,44 @@
+table similarity_heatmap
+	lineageTag: e952e8a1-0214-41b8-955f-00f908a32bda
+
+	column document_id_a
+		dataType: int64
+		lineageTag: 69a5e994-e21a-4220-8369-3be7def3e0ce
+		summarizeBy: none
+		sourceColumn: document_id_a
+
+	column document_id_b
+		dataType: int64
+		lineageTag: d6aa4e5d-963b-4563-a6be-7c0ec2aa9d42
+		summarizeBy: none
+		sourceColumn: document_id_b
+
+	column title_a
+		dataType: string
+		lineageTag: 787520a2-1746-4c62-9ee2-3692938f52f7
+		summarizeBy: none
+		sourceColumn: title_a
+
+	column title_b
+		dataType: string
+		lineageTag: acd2968a-002e-4a47-b243-fce96652fe63
+		summarizeBy: none
+		sourceColumn: title_b
+
+	column cosine_similarity
+		dataType: double
+		formatString: 0.000
+		lineageTag: 9cb078fe-af79-4986-b15c-20a3e335932e
+		summarizeBy: none
+		sourceColumn: cosine_similarity
+
+	partition similarity_heatmap = m
+		mode: import
+		source =
+				let
+				    Source = semantic_similarity,
+				    Mirrored = Table.RenameColumns(Source, {{"document_id_a", "temp_id"}, {"title_a", "temp_title"}, {"document_id_b", "document_id_a"}, {"title_b", "title_a"}}),
+				    Renamed = Table.RenameColumns(Mirrored, {{"temp_id", "document_id_b"}, {"temp_title", "title_b"}}),
+				    Result = Table.Combine({Source, Renamed})
+				in
+				    Result

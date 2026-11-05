@@ -1,0 +1,18 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-IN
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation PBI_QueryOrder = ["documents","ai_analytics","ingestion_analytics","semantic_vectors","semantic_similarity","similarity_heatmap","ExportFolder"]
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table documents
+ref table ai_analytics
+ref table ingestion_analytics
+ref table semantic_vectors
+ref table semantic_similarity
+ref table similarity_heatmap

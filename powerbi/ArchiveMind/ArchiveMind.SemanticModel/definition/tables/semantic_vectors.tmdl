@@ -1,0 +1,56 @@
+table semantic_vectors
+	lineageTag: b387557f-a937-4b42-8519-0d3a07e42ea8
+
+	column document_id
+		dataType: int64
+		lineageTag: abe163ba-b7d6-4577-bf00-2dbef9cdf193
+		summarizeBy: none
+		sourceColumn: document_id
+
+	column title
+		dataType: string
+		lineageTag: db7925be-b74b-4801-bf8e-8d1fbd579400
+		summarizeBy: none
+		sourceColumn: title
+
+	column domain
+		dataType: string
+		lineageTag: dfdd1712-beb0-4f80-bd42-1b4ac478e70a
+		summarizeBy: none
+		sourceColumn: domain
+
+	column collection
+		dataType: string
+		lineageTag: 51ec7581-ee73-4144-a0f4-7d1cffc4c040
+		summarizeBy: none
+		sourceColumn: collection
+
+	column era
+		dataType: string
+		lineageTag: 71f4ce26-81b0-4233-b209-f862cbd5b1ef
+		summarizeBy: none
+		sourceColumn: era
+
+	column x
+		dataType: double
+		lineageTag: be7ccdcd-3253-4258-a421-3724d2c1c945
+		summarizeBy: none
+		sourceColumn: x
+
+	column y
+		dataType: double
+		lineageTag: 016bec10-c2d1-4e38-8417-cce75564a9da
+		summarizeBy: none
+		sourceColumn: y
+
+	partition semantic_vectors = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(ExportFolder & "/semantic_vectors.csv"), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				    Headers = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    Nulls = Table.ReplaceValue(Headers, "", null, Replacer.ReplaceValue, Table.ColumnNames(Headers)),
+				    Typed = Table.TransformColumnTypes(Nulls, {{"document_id", Int64.Type}, {"title", type text}, {"domain", type text}, {"collection", type text}, {"era", type text}, {"x", type number}, {"y", type number}}, "en-US"),
+				    Clean = Table.ReplaceErrorValues(Typed, List.Transform(Table.ColumnNames(Typed), each {_, null}))
+				in
+				    Clean

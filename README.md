@@ -188,3 +188,6 @@ Access the dashboard at **`http://localhost:8000`** in your browser.
 ## 7. License & Attribution
 Developed as part of the **VDUI Project**.  
 All historical manuscript transcripts belong to their respective archival repositories (Cambridge Digital Archives, Vatican Apostolic Library, National Archives of India, Bletchley Park Trust).
+
+## Power BI analytics
+See [Power BI integration](powerbi/README.md) for CSV export, the three-page Desktop report, and manual refresh. Contribution: Aayaan Kamil.
