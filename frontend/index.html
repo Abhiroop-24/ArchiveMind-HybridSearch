@@ -3728,29 +3728,44 @@
                             ]
                         },
                         options: {
-                            ...commonOptions,
+                            responsive: true,
+                            maintainAspectRatio: false,
                             plugins: {
-                                ...commonOptions.plugins,
+                                legend: {
+                                    labels: {
+                                        color: '#ccc',
+                                        font: { family: 'monospace', size: 10 }
+                                    }
+                                },
                                 tooltip: {
-                                    ...commonOptions.plugins.tooltip,
+                                    backgroundColor: '#000',
+                                    borderColor: '#333',
+                                    borderWidth: 1,
+                                    titleFont: { family: 'monospace', size: 11, weight: 'bold' },
+                                    bodyFont: { family: 'monospace', size: 10 },
                                     callbacks: {
                                         label: function(ctx) {
                                             const item = ctx.raw;
-                                            return `${item.title}: Sobel=${item.x}px/grad, OCR=${item.y}%`;
+                                            return `${item.title}: Sobel=${item.x} px/grad, OCR=${item.y}%`;
                                         }
                                     }
                                 }
                             },
                             scales: {
                                 x: {
-                                    ...commonOptions.scales.x,
-                                    title: { display: true, text: 'Sobel Edge Energy (px/grad)', color: '#888', font: { family: 'monospace', size: 9 } }
+                                    type: 'linear',
+                                    position: 'bottom',
+                                    grid: { color: 'rgba(255,255,255,0.06)' },
+                                    ticks: { color: '#888', font: { family: 'monospace', size: 9 } },
+                                    title: { display: true, text: 'Sobel Edge Gradient Energy (px/grad)', color: '#888', font: { family: 'monospace', size: 9 } }
                                 },
                                 y: {
-                                    ...commonOptions.scales.y,
-                                    min: 75,
+                                    type: 'linear',
+                                    min: 65,
                                     max: 100,
-                                    title: { display: true, text: 'OCR Confidence (%)', color: '#888', font: { family: 'monospace', size: 9 } }
+                                    grid: { color: 'rgba(255,255,255,0.06)' },
+                                    ticks: { color: '#888', font: { family: 'monospace', size: 9 } },
+                                    title: { display: true, text: 'OCR Character / Word Confidence (%)', color: '#888', font: { family: 'monospace', size: 9 } }
                                 }
                             }
                         }

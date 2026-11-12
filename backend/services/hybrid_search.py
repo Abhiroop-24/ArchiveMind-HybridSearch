@@ -152,18 +152,28 @@ def execute_hybrid_search(
         for doc_id, doc in all_docs.items():
             semantic_scores[doc_id] = round(0.40 + ((doc_id * 17) % 55) / 100.0, 4)
 
+    # Normalize semantic scores to [0.0, 1.0] across candidate documents
+    if clean_q and semantic_scores:
+        max_s = max(semantic_scores.values())
+        min_s = min(semantic_scores.values())
+        s_range = max(1e-5, max_s - min_s)
+        norm_semantic = {doc_id: round(max(0.0, (score - min_s) / s_range), 4) for doc_id, score in semantic_scores.items()}
+    else:
+        norm_semantic = semantic_scores
+
     # Step 4: Combine into Hybrid Score
     results = []
     # Rank lists for Reciprocal Rank Fusion (RRF)
     k_sorted_docs = sorted(all_docs.keys(), key=lambda d: norm_keyword.get(d, 0.0), reverse=True)
-    s_sorted_docs = sorted(all_docs.keys(), key=lambda d: semantic_scores.get(d, 0.0), reverse=True)
+    s_sorted_docs = sorted(all_docs.keys(), key=lambda d: norm_semantic.get(d, 0.0), reverse=True)
 
     k_ranks = {doc_id: i + 1 for i, doc_id in enumerate(k_sorted_docs)}
     s_ranks = {doc_id: i + 1 for i, doc_id in enumerate(s_sorted_docs)}
 
     for doc_id, doc in all_docs.items():
         k_val = norm_keyword.get(doc_id, 0.0)
-        s_val = round(semantic_scores.get(doc_id, 0.0), 4)
+        s_val = norm_semantic.get(doc_id, 0.0)
+        raw_s_val = round(semantic_scores.get(doc_id, 0.0), 4)
 
         # Weighted Score Fusion: Alpha in [0.0, 1.0]
         hybrid_score = round(alpha * k_val + (1.0 - alpha) * s_val, 4)
@@ -192,7 +202,8 @@ def execute_hybrid_search(
             "image_path": doc["image_path"],
             "checksum_value": doc["checksum_value"],
             "keyword_score": k_val,
-            "semantic_score": s_val,
+            "semantic_score": raw_s_val,
+            "normalized_semantic_score": s_val,
             "hybrid_score": hybrid_score,
             "rrf_score": rrf_score,
             "matching_passage": matched_passage,
